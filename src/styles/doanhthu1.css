@@ -1,0 +1,285 @@
+:root {
+    --main-color-b:#2a94f7;
+    --main-color:  #42b6f5;
+    --main-color-fade: #6cc5f5;
+    --text-color: #333333;
+    --white-color: #ffffff;
+    --grey-color: #8390a2;
+    --backgroud-color:  #23b499;
+  
+
+} 
+
+* {
+    box-sizing: inherit;
+}
+html {
+
+    font-family: sans-serif;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.incread {
+    color: seagreen;
+}
+
+.decrease {
+    color: red;
+}
+
+.color_chart_profit {
+    width: 60px;
+    height: 20px;
+    background-color: var(--main-color);
+}
+
+.color_chart_revenue {
+    width: 60px;
+    height: 20px;
+    background-color: green;
+}
+
+
+.color_chart_spend {
+    width: 60px;
+    height: 20px;
+    background-color: red;
+}
+/* căn chỉnh lay out */
+
+.grid {
+    width: 1200px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.grid__full-width {
+    width: 100%;
+}
+.grid__row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -12px;
+    margin-right: -12px;
+}
+
+.grid__column-4 {
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 30%;
+}
+
+.grid__column-8 {
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 70%;
+}
+.H_wrapper {
+    margin-top: 64px;
+}
+
+/* Phần doanh thu chung */
+.H_general_nofi {
+    background: linear-gradient(to right, var(--main-color-b), var(--main-color-fade));
+    border-radius: 8px;
+    height: 150px;
+    display: flex;
+    padding: 12px 24px;
+    align-items: center;
+}
+
+.H_general_nofi_icon {
+    margin: 0 24px;
+    font-size: 60px;
+    color: var(--white-color);
+}
+
+.H_general_nofi_detail {
+    margin: 0 24px;
+}
+
+.H_general_nofi_detail h4 {
+    color: var(--white-color);
+    font-size: 24px;
+    margin: 12px 0;
+}
+
+.H_general_nofi_detail p {
+    font-size: 20px;
+    color: var(--text-color);
+    font-style: italic;
+}
+
+.H_general_moneycards {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.small_card {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    background-color: var(--white-color);
+    width: 30%;
+    border-radius: 8px;
+    padding: 12px;
+    color: var(--text-color);
+}
+
+.small_card_icon {
+    margin-bottom: 12px;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(66, 182, 245, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--main-color-b);
+}
+ 
+.small_card_icon i {
+    font-size: 30px;
+}
+.small_card_flex {
+    display: flex;
+    align-items: center;
+}
+.small_card_detail {
+    margin-left: 12px;
+}
+
+.small_card_detail h4{
+    font-size: 20px;
+    margin: 8px;
+    font-weight: bold;
+}
+
+.small_card_detail h2 {
+    font-size: 20px;
+    margin: 8px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.small_card p{
+    margin-left: 12px;
+    font-size: 20px;
+}
+
+/* đồ thị */
+.H_general_chart {
+    background-color: var(--white-color);
+    padding: 24px;
+    border-radius: 8px;
+}
+
+.H_time_select_total {
+    margin-bottom: 24px;
+}
+
+.H_time_select_total p {
+    font-size: 20px;
+    opacity: 0.8;
+    
+}
+
+.H_chart_total_content {
+    margin: 12px 0;
+    margin-bottom: 36px;
+}
+
+#H_time_select_total {
+    width: 200px;
+    padding: 8px 12px;
+    cursor: pointer;
+    
+}
+
+.H_chart_total_content h3{
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.H_chart_total_content p {
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.H_chart_total_component {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 36px;
+    align-items: center;
+}
+
+
+/* Thông tin liên lạc */
+.H_general_contact {
+    background-color: var(--white-color);
+    border-radius: 8px;
+    padding: 12px 24px;
+}
+
+.H_contact_head {
+    border-bottom: 2px solid var(--grey-color);
+    color: var(--text-color);
+}
+
+.H_contact_head h4 {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.H_contact_head p, .H_contact_table_name p {
+    opacity: 0.8;
+}
+
+.H_contact_table {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.H_contact_table_img {
+    width: 20%;
+}
+
+.H_contact_table_img img {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.H_contact_table_name {
+    flex: 1;
+    padding: 4px;
+}
+
+.H_contact_table_name h5{
+    margin: 4px;
+    font-size: 15px;
+}
+
+.H_contact_table_name p{
+    margin: 8px 4px;
+    font-size: 15px;
+}
+
+.H_contact_table_icon {
+    padding: 4px;
+    font-size: 20px;
+    color: var(--grey-color);
+    cursor: pointer;
+}
+
+.H_contact_table_icon i {
+    margin: 0 4px;
+}
+
+.H_contact_table_icon i:hover {
+    color: var(--main-color);
+}
+
