@@ -98,7 +98,7 @@
           <v-card>
             <v-app-bar flat color="rgba(0,0,0,0)">
               <v-toolbar-title class="title black--text pl-0 ml-2">
-                Impression
+                Website visitors
               </v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color="deep-purple" class="white--text mr-2">Weekly</v-btn>
@@ -119,57 +119,26 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-card>
-            <v-app-bar flat color="rgba(0,0,0,0)">
-              <v-toolbar-title class="title black--text pl-0 ml-2">
-                Activity
-              </v-toolbar-title>
-            </v-app-bar>
-            <v-app-bar flat color="rgba(0,0,0,0)">
-              <v-btn fab color="purple lighten-4" elevation="0">
-                <v-icon color="purple">fab fa-bitcoin</v-icon>
-              </v-btn>
-              <v-toolbar-title class="title black--text ml-2">
-                Sent Bitcoin
-                <span class="caption"><br />To Bitcoin Address</span>
-              </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-toolbar-title class="subtitle-1 black--text ml-2">
-                -0.00257 BTC
-              </v-toolbar-title>
-              <v-icon color="green" class="ml-2"
-                >fas fa-long-arrow-alt-up</v-icon
-              >
-            </v-app-bar>
-            <v-app-bar flat color="rgba(0,0,0,0)">
-              <v-btn fab color="green lighten-4" elevation="0">
-                <v-icon color="green">fas fa-yen-sign</v-icon>
-              </v-btn>
-              <v-toolbar-title class="title black--text ml-2">
-                Receive Lightcoin <span class="caption"><br />Pending</span>
-              </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-toolbar-title class="subtitle-1 black--text ml-2">
-                -0.0133643 LTC
-              </v-toolbar-title>
-              <v-icon color="red" class="ml-2"
-                >fas fa-long-arrow-alt-down</v-icon
-              >
-            </v-app-bar>
-            <v-app-bar flat color="rgba(0,0,0,0)">
-              <v-btn fab color="green lighten-4" elevation="0">
-                <v-icon color="green">fas fa-yen-sign</v-icon>
-              </v-btn>
-              <v-toolbar-title class="title black--text ml-2">
-                Receive Lightcoin <span class="caption"><br />Pending</span>
-              </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-toolbar-title class="subtitle-1 black--text ml-2">
-                -0.0133643 LTC
-              </v-toolbar-title>
-              <v-icon color="red" class="ml-2"
-                >fas fa-long-arrow-alt-down</v-icon
-              >
-            </v-app-bar>
+            <v-card-title> Sales Ranking </v-card-title>
+            <v-list two-line>
+              <template v-for="item in rankings">
+                <v-list-item :key="item.title">
+                  <v-list-item-avatar tile>
+                    <v-img :src="item.avatar"></v-img>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title v-html="item.title"></v-list-item-title>
+                    <v-list-item-subtitle
+                      v-html="item.subtitle"
+                    ></v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-spacer :key="item.title"></v-spacer>
+                  <v-icon color="red" class="ml-2"
+                    >fas fa-long-arrow-alt-down</v-icon
+                  >
+                </v-list-item>
+              </template>
+            </v-list>
           </v-card>
         </v-col>
         <v-col cols="12" sm="6">
@@ -178,12 +147,12 @@
               <v-col cols="12" sm="4">
                 <v-list-item three-line>
                   <v-list-item-content>
-                    <div class="mb-4">Bitcoin</div>
+                    <div class="mb-4">Revenue</div>
                     <v-list-item-title class="headline mb-1 black--text">
-                      2.5578 BTC
+                      2.5578 $
                     </v-list-item-title>
                     <v-list-item-subtitle class="grey--text"
-                      >$2500 USD</v-list-item-subtitle
+                      >Last 24 hours</v-list-item-subtitle
                     >
                   </v-list-item-content>
                 </v-list-item>
@@ -262,90 +231,16 @@
         <v-col cols="12" sm="6">
           <v-card>
             <v-toolbar-title class="title black--text pl-0 ml-2">
-                Recently user
-              </v-toolbar-title>
+              Recently user
+            </v-toolbar-title>
             <v-data-table
               :headers="headers"
               item-key="name"
               :items="users"
               disable-sort
+              hide-default-footer
+              :items-per-page="5"
             >
-              <!-- <template v-slot:top>
-              <v-dialog v-model="dialog" max-width="500px">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    color="primary"
-                    dark
-                    class="mb-2"
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    New Item
-                  </v-btn>
-                </template>
-                <v-card>
-                  <v-card-title>
-                    <span class="text-h5">{{ formTitle }}</span>
-                  </v-card-title>
-
-                  <v-card-text>
-                    <v-container>
-                      <v-row>
-                        <v-col cols="12" sm="6">
-                          <v-text-field
-                            label="Name"
-                            dense
-                            outlined
-                            rounded
-                          ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                          <v-text-field
-                            label="Email"
-                            dense
-                            outlined
-                            rounded
-                          ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                          <v-select
-                            label="Status"
-                            dense
-                            outlined
-                            rounded
-                            :items="status"
-                          >
-                          </v-select>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                          <v-select
-                            label="Role"
-                            dense
-                            outlined
-                            rounded
-                            :items="roles"
-                          ></v-select>
-                        </v-col>
-                      </v-row>
-                    </v-container>
-                  </v-card-text>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="close">
-                      Cancel
-                    </v-btn>
-                    <v-btn color="blue darken-1" text> Save </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </template>
-            <template v-slot:[`item.actions`]="{ item }">
-              <v-icon small class="mr-2" @click="editItem(item)">
-                mdi-pencil
-              </v-icon>
-              <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-            </template> -->
               <template v-slot:[`item.status`]="{ item }">
                 <v-chip :color="getColor(item.status)" dark small>
                   {{ item.status }}
@@ -356,9 +251,9 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-card>
-              <v-toolbar-title class="title black--text pl-0 ml-2">
-                Orders status
-              </v-toolbar-title>
+            <v-toolbar-title class="title black--text pl-0 ml-2">
+              Orders status
+            </v-toolbar-title>
             <v-data-table
               :headers="oHeaders"
               item-key="name"
@@ -398,6 +293,24 @@ export default {
     selected: [],
     dialog: false,
     //singleSelected: false,
+    rankings: [
+      {
+        avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+        title: "Brunch this weekend?",
+        subtitle: `<span class="text--primary">Ali Connors</span> &mdash;`,
+      },
+      {
+        avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
+        title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
+        subtitle: `<span class="text--primary">to Alex, Scott, Jennifer</span> `,
+      },
+      {
+        avatar: "https://cdn.vuetifyjs.com/images/lists/3.jpg",
+        title: "Oui oui",
+        subtitle: '<span class="text--primary">Sandra Adams</span> ',
+      },
+    ],
+
     headers: [
       {
         text: "Name",
