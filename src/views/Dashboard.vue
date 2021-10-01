@@ -96,16 +96,14 @@
       <v-row>
         <v-col cols="12" sm="6">
           <v-card>
-            <v-app-bar flat color="rgba(0,0,0,0)">
-              <v-toolbar-title class="title black--text pl-0 ml-2">
-                Website visitors
-              </v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn color="deep-purple" class="white--text mr-2">Weekly</v-btn>
-              <v-btn color="deep-purple lighten-4" class="deep-purple--text"
-                >Monthly</v-btn
-              >
-            </v-app-bar>
+            <v-card-title>Website visitor</v-card-title>
+
+            <v-spacer></v-spacer>
+            <v-btn color="deep-purple " class="white--text mx-2">Weekly</v-btn>
+            <v-btn color="deep-purple lighten-4" class="deep-purple--text"
+              >Monthly</v-btn
+            >
+
             <v-sparkline
               :fill="fill"
               :line-width="width"
@@ -121,9 +119,9 @@
           <v-card>
             <v-card-title> Sales Ranking </v-card-title>
             <v-list two-line>
-              <template v-for="item in rankings">
-                <v-list-item :key="item.title">
-                  <v-list-item-avatar tile>
+              <template v-for="(item, i) in rankings">
+                <v-list-item :key="i">
+                  <v-list-item-avatar tile width="70">
                     <v-img :src="item.avatar"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
@@ -133,7 +131,15 @@
                     ></v-list-item-subtitle>
                   </v-list-item-content>
                   <v-spacer :key="item.title"></v-spacer>
-                  <v-icon color="red" class="ml-2"
+                  <span>{{ item.ranking }}</span>
+                  <v-icon
+                    v-if="item.ranking > 0"
+                    :key="i"
+                    color="green"
+                    class="ml-2"
+                    >fas fa-long-arrow-alt-up</v-icon
+                  >
+                  <v-icon v-else :key="i" color="red" class="ml-2"
                     >fas fa-long-arrow-alt-down</v-icon
                   >
                 </v-list-item>
@@ -143,11 +149,11 @@
         </v-col>
         <v-col cols="12" sm="6">
           <v-card height="200px">
+            <v-card-title> Revenue </v-card-title>
             <v-row>
               <v-col cols="12" sm="4">
                 <v-list-item three-line>
                   <v-list-item-content>
-                    <div class="mb-4">Revenue</div>
                     <v-list-item-title class="headline mb-1 black--text">
                       2.5578 $
                     </v-list-item-title>
@@ -171,59 +177,20 @@
                   color="red"
                 >
                 </v-sparkline>
-                <v-card-actions class="justify-end">
-                  <v-btn text color="green">
-                    <v-icon class="mt-n2 pr-2">fas fa-sort-down</v-icon> 8.5
-                  </v-btn>
-                </v-card-actions>
               </v-col>
             </v-row>
           </v-card>
         </v-col>
         <v-col cols="12" sm="6">
           <v-card height="200px">
-            <v-row>
-              <v-col cols="12" sm="6" class="border">
-                <v-list-item three-line>
-                  <v-list-item-content>
-                    <div class="mb-4">Your Portfolio</div>
-                    <v-row>
-                      <v-col cols="12" sm="6">
-                        <v-progress-circular
-                          rotate="360"
-                          size="100"
-                          width="15"
-                          value="70"
-                          color="teal"
-                        >
-                          70%
-                        </v-progress-circular>
-                      </v-col>
-                      <v-col cols="12" sm="6">
-                        <v-list-item-subtitle class="grey--text mt-8"
-                          >2.5578 BTC</v-list-item-subtitle
-                        >
-                        <v-list-item-subtitle class="grey--text"
-                          >2500 USD</v-list-item-subtitle
-                        >
-                      </v-col>
-                    </v-row>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-col>
-              <v-col cols="12" sm="6" align="center">
-                <v-list-item two-line class="mt-10">
-                  <v-list-item-content>
-                    <v-list-item-title class="headline mb-1 black--text">
-                      $8520.50
-                    </v-list-item-title>
-                    <v-list-item-subtitle class="grey--text"
-                      >Pending Balance</v-list-item-subtitle
-                    >
-                  </v-list-item-content>
-                </v-list-item>
-              </v-col>
-            </v-row>
+            <v-card-title>
+              Noctification
+              <v-spacer></v-spacer>
+              <v-btn><v-icon> mdi-bell-ring-outline</v-icon></v-btn>
+            </v-card-title>
+            <v-form ref="form" class="px-4">
+              <v-text-field label="Content" dense outlined></v-text-field>
+            </v-form>
           </v-card>
         </v-col>
       </v-row>
@@ -276,7 +243,7 @@
 
 <script>
 export default {
-  name: "TrungTam",
+  name: "Dashboard",
   data: () => ({
     tab: null,
     text: "center",
@@ -295,19 +262,25 @@ export default {
     //singleSelected: false,
     rankings: [
       {
-        avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-        title: "Brunch this weekend?",
-        subtitle: `<span class="text--primary">Ali Connors</span> &mdash;`,
+        avatar:
+          "https://cdn.shopify.com/s/files/1/2695/0984/products/new-main.png?v=1611181256",
+        title: "Zero Theme PRO",
+        subtitle: "12.98$",
+        ranking: 1,
       },
       {
-        avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
-        title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-        subtitle: `<span class="text--primary">to Alex, Scott, Jennifer</span> `,
+        avatar:
+          "https://cdn.shopify.com/s/files/1/2695/0984/products/main_1ce7d3ed-f3bd-4357-b8d9-420adb7680d9.png?v=1591233287",
+        title: "Flairo Theme PRO",
+        subtitle: "9.83$",
+        ranking: -1,
       },
       {
-        avatar: "https://cdn.vuetifyjs.com/images/lists/3.jpg",
-        title: "Oui oui",
-        subtitle: '<span class="text--primary">Sandra Adams</span> ',
+        avatar:
+          "https://cdn.shopify.com/s/files/1/2695/0984/products/alpha-main.png?v=1582695312",
+        title: "Alpha Theme Bundle",
+        subtitle: "4.18$",
+        ranking: 3,
       },
     ],
 
@@ -419,6 +392,14 @@ export default {
         email: "a@a.a",
         status: "Active",
         role: "Admin",
+      },
+    ],
+    itemsNoc: [
+      {
+        action: "15 min",
+        headline: "Brunch this weekend?",
+        subtitle: `I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+        title: "Ali Connors",
       },
     ],
   }),

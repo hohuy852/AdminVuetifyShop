@@ -27,7 +27,7 @@
 
       <v-toolbar-title>Admin</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn fab text>
+      <v-btn fab text to="/login">
         <v-icon>mdi-account</v-icon>
       </v-btn>
     </v-app-bar>

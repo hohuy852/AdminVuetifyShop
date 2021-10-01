@@ -124,13 +124,13 @@
         <template v-slot:[`item.previewImage`]="{ item }">
           <v-row>
             <v-col v-for="(image, i) in item.previewImage" :key="i">
-              <v-img :src="image.src" width="40px" height="40px"> </v-img>
+              <v-img  :src="image.src" width="40px" height="40px"> </v-img>
             </v-col>
           </v-row>
         </template>
         <template v-slot:[`item.img`]="{ item }">
-          <div>
-            <v-img :src="item.img" width="80px" height="50px"> </v-img>
+          <div class="py-2">
+            <v-img  :src="item.img" width="80px" height="50px"> </v-img>
           </div>
         </template>
       </v-data-table>
@@ -258,7 +258,7 @@ export default {
     }
 }
   },
-  created() {
+  mounted() {
     this.loading = true
     this.getProducts().then(
       () => {

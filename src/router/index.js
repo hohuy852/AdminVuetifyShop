@@ -17,13 +17,18 @@ const routes = [
   {
     path: '/orders',
     name: 'Orders',
-    component: () => import(/* webpackChunkName: "products" */ '../views/Orders.vue')
+    component: () => import(/* webpackChunkName: "orders" */ '../views/Orders.vue')
   },
   {
     path: '/users',
     name: 'Users',
-    component: () => import(/* webpackChunkName: "products" */ '../views/Users.vue')
+    component: () => import(/* webpackChunkName: "users" */ '../views/Users.vue')
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+  }
   
 
 

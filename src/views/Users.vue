@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title>
-        Products
+       User
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -21,6 +21,7 @@
         :items-per-page="-1"
         :search="search"
         :loading="loading"
+
       >
         <template v-slot:top>
           <v-dialog v-model="dialog" max-width="500px">
@@ -126,12 +127,20 @@
           </v-icon>
           <v-icon small color="red"> fas fa-ban </v-icon>
         </template>
-        <template v-slot:[`item.previewImage`]="{ item }">
-          <v-row>
-            <v-col v-for="(image, i) in item.previewImage" :key="i">
-              <v-img :src="image.src" width="40px" height="40px"> </v-img>
-            </v-col>
-          </v-row>
+        <template v-slot:[`item.DOB`]="{ item }">
+          <div>
+            <span v-if="item.DOB != null">{{ item.DOB.substr(0,10) }}</span>
+          </div>
+        </template>
+        <template v-slot:[`item.status`]="{ item }">
+          <v-chip :color="getStatusColor(item.status)" dark small>
+            {{ item.status }}
+          </v-chip>
+        </template>
+        <template v-slot:[`item.role`]="{ item }">
+          <v-chip :color="getRoleColor(item.role)" dark small>
+            {{ item.role }}
+          </v-chip>
         </template>
       </v-data-table>
     </v-card>
@@ -140,6 +149,7 @@
 
 
 <script>
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -167,6 +177,20 @@ export default {
       },
       search: "",
       dialog: false,
+      test: [
+        {
+          _id: "6151767330135c54093634b1",
+          email: "hohuy@example.com",
+          firstName: "ho321313",
+          lastName: "huy2132133",
+          status: "Active",
+          role: "User",
+          __v: 19,
+          DOB: "2021-09-08T00:00:00.000Z",
+          gender: "Male",
+          phonenumber: "3",
+        },
+      ],
       headers: [
         {
           text: "ID",
@@ -221,14 +245,24 @@ export default {
     },
   },
   methods: {
+    getStatusColor(status) {
+      if (status == "Banned") return "red";
+      else if (status == "Morderate" || status == "Pending") return "orange";
+      else return "green";
+    },
+    getRoleColor(role) {
+      if (role == "Admin") return "red";
+      else return "green";
+    },
     close() {
       this.dialog = false;
     },
     submitFiles() {},
+    ...mapActions(["getUsers"]),
   },
-  created() {
+  mounted() {
     this.loading = true;
-    this.$store.dispatch("getUsers").then(
+    this.getUsers().then(
       () => {
         this.loading = false;
       },

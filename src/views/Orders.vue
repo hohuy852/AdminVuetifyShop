@@ -23,21 +23,10 @@
         :loading="loading"
       >
         <template v-slot:top>
+          <v-btn color="primary" dark class="ml-2">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
           <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                color="primary"
-                dark
-                class="mb-2 mx-2"
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn color="primary" dark class="mb-2">
-                <v-icon>mdi-refresh</v-icon>
-              </v-btn>
-            </template>
             <v-card>
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
@@ -119,19 +108,24 @@
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">
-            mdi-pencil
+           mdi-keyboard-return
           </v-icon>
           <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
         <template v-slot:[`item.OrderItems`]="{ item }">
-            <div v-for="(product, i) in item.OrderItems" :key="i">
-                <span>{{product.name}}</span>
-            </div>
-        </template>
-        <template v-slot:[`item.img`]="{ item }">
-          <div>
-            <v-img :src="item.img" width="80px" height="50px"> </v-img>
+          <div v-for="(product, i) in item.OrderItems" :key="i">
+            <span>{{ product.name }}</span>
           </div>
+        </template>
+        <template v-slot:[`item.Datetime`]="{ item }">
+          <div>
+            <span>{{ item.Datetime.substr(0, 10) }}</span>
+          </div>
+        </template>
+        <template v-slot:[`item.status`]="{ item }">
+          <v-chip :color="getColor(item.status)" dark small>
+            {{ item.status }}
+          </v-chip>
         </template>
       </v-data-table>
     </v-card>
@@ -166,6 +160,35 @@ export default {
       },
       search: "",
       dialog: false,
+      test: [
+        {
+          _id: "61470707dd5b0199ae1e99dd",
+          status: "Paid",
+          OrderItems: [
+            {
+              _id: "61470707dd5b0199ae1e99de",
+              idProduct: "61125d7b516b371f38dc4123",
+              name: "Vuetify Material Kit",
+              quantity: 3,
+              price: 8.58,
+            },
+          ],
+          idUser: "613ba5097b92504198effbb0",
+          Datetime: "2021-09-19T09:46:47.000Z",
+          total: 25.74,
+          discount: "",
+          email: "123456",
+          firstName: "demo",
+          lastName: "demo",
+          company: "a",
+          address: "a",
+          apartment: "a",
+          city: "a",
+          country: "Afghanistan",
+          postalCode: "313",
+          phone: "a",
+        },
+      ],
       headers: [
         {
           text: "OrderID",
@@ -178,11 +201,12 @@ export default {
         {
           text: "OrderItems",
           value: "OrderItems",
-          width: '170px'
+          width: "170px",
         },
         {
           text: "Order Date",
           value: "Datetime",
+          width: "110px",
         },
         {
           text: "Email",
@@ -225,13 +249,21 @@ export default {
           value: "phone",
         },
         {
+          text: "Discount Code",
+          value: "discount",
+        },
+        {
+          text: "Total",
+          value: "total",
+        },
+        {
           text: "Status",
           value: "status",
           align: "center",
         },
         {
-          text: "Total",
-          value: "total",
+          text: "Actions",
+          value: "actions",
         },
       ],
     };
@@ -259,18 +291,23 @@ export default {
       this.dialog = true;
     },
     submitFiles() {},
+    getColor(status) {
+      if (status == "Banned") return "red";
+      else if (status == "Morderate" || status == "Pending") return "orange";
+      else return "green";
+    },
   },
-  created() {
-    this.loading = true
+  mounted() {
+    this.loading = true;
     this.getOrders().then(
-      () =>{
-        this.loading = false
+      () => {
+        this.loading = false;
       },
-      err =>{
-        console.log(err.response.data)
-        this.loading = false
+      (err) => {
+        console.log(err.response.data);
+        this.loading = false;
       }
-    )
+    );
   },
 };
 </script>
