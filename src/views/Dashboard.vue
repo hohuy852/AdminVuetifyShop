@@ -148,7 +148,7 @@
           </v-card>
         </v-col>
         <v-col cols="12" sm="6">
-          <v-card height="200px">
+          <v-card height="260px">
             <v-card-title> Revenue </v-card-title>
             <v-row>
               <v-col cols="12" sm="4">
@@ -182,14 +182,39 @@
           </v-card>
         </v-col>
         <v-col cols="12" sm="6">
-          <v-card height="200px">
+          <v-card height="260px">
             <v-card-title>
               Noctification
               <v-spacer></v-spacer>
               <v-btn><v-icon> mdi-bell-ring-outline</v-icon></v-btn>
             </v-card-title>
+            <v-card-title>
+              <v-autocomplete
+                prepend-icon="mdi-send"
+                clearable
+                dense
+                :items="users"
+                return-object
+                item-text="email"
+                item-value="email"
+                chips
+                multiple
+              >
+                <template v-slot:selection="data">
+                  <v-chip
+                    v-bind="data.attrs"
+                    :input-value="data.selected"
+                    close
+                    @click="data.select"
+                    @click:close="remove(data.item)"
+                  >
+                    {{ data.item.email }}
+                  </v-chip>
+                </template>
+              </v-autocomplete>
+            </v-card-title>
             <v-form ref="form" class="px-4">
-              <v-text-field label="Content" dense outlined></v-text-field>
+              <v-textarea outlined label="Content" height="90"></v-textarea>
             </v-form>
           </v-card>
         </v-col>
@@ -242,6 +267,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "Dashboard",
   data: () => ({
@@ -356,44 +382,44 @@ export default {
     ],
     roles: ["Teacher", "Student", "Worker"],
     status: ["Active", "Teaching", "Absent"],
-    users: [
-      {
-        name: "A",
-        email: "a@a.a",
-        status: "Active",
-        role: "User",
-      },
-      {
-        name: "B",
-        email: "a@a.a",
-        status: "Active",
-        role: "User",
-      },
-      {
-        name: "C",
-        email: "a@a.a",
-        status: "Active",
-        role: "User",
-      },
-      {
-        name: "D",
-        email: "a@a.a",
-        status: "Active",
-        role: "User",
-      },
-      {
-        name: "E",
-        email: "a@a.a",
-        status: "Active",
-        role: "User",
-      },
-      {
-        name: "F",
-        email: "a@a.a",
-        status: "Active",
-        role: "Admin",
-      },
-    ],
+    // users: [
+    //   {
+    //     name: "A",
+    //     email: "a@a.a",
+    //     status: "Active",
+    //     role: "User",
+    //   },
+    //   {
+    //     name: "B",
+    //     email: "a@a.a",
+    //     status: "Active",
+    //     role: "User",
+    //   },
+    //   {
+    //     name: "C",
+    //     email: "a@a.a",
+    //     status: "Active",
+    //     role: "User",
+    //   },
+    //   {
+    //     name: "D",
+    //     email: "a@a.a",
+    //     status: "Active",
+    //     role: "User",
+    //   },
+    //   {
+    //     name: "E",
+    //     email: "a@a.a",
+    //     status: "Active",
+    //     role: "User",
+    //   },
+    //   {
+    //     name: "F",
+    //     email: "a@a.a",
+    //     status: "Active",
+    //     role: "Admin",
+    //   },
+    // ],
     itemsNoc: [
       {
         action: "15 min",
@@ -408,6 +434,9 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
+    users() {
+      return this.$store.state.users.users.allUser;
+    },
   },
   methods: {
     close() {
@@ -418,6 +447,18 @@ export default {
       else if (status == "Morderate" || status == "Pending") return "orange";
       else return "green";
     },
+    ...mapActions(["getUsers"]),
+  },
+  mounted() {
+    this.getUsers().then(
+      () => {
+        this.loading = false;
+      },
+      (err) => {
+        console.log(err.response.data);
+        this.loading = false;
+      }
+    );
   },
 };
 </script>

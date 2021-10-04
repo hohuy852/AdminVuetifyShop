@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" app>
       <v-list>
         <v-list-item class="px-2">
-          <v-img src="logo.jpg"></v-img>
+          <v-img src="vuetify-svg.svg"></v-img>
         </v-list-item>
         <v-list nav>
           <v-list-item link v-for="item in NavItems" :key='item.title' :to="item.route"> 
