@@ -186,7 +186,9 @@
             <v-card-title>
               Noctification
               <v-spacer></v-spacer>
-              <v-btn><v-icon> mdi-bell-ring-outline</v-icon></v-btn>
+              <v-btn @click="postNotification(content, userList)"
+                ><v-icon> mdi-bell-ring-outline</v-icon></v-btn
+              >
             </v-card-title>
             <v-card-title>
               <v-autocomplete
@@ -194,11 +196,11 @@
                 clearable
                 dense
                 :items="users"
-                return-object
                 item-text="email"
-                item-value="email"
+                item-value="_id"
                 chips
                 multiple
+                v-model="userList"
               >
                 <template v-slot:selection="data">
                   <v-chip
@@ -214,7 +216,12 @@
               </v-autocomplete>
             </v-card-title>
             <v-form ref="form" class="px-4">
-              <v-textarea outlined label="Content" height="90"></v-textarea>
+              <v-textarea
+                v-model="content"
+                outlined
+                label="Content"
+                height="90"
+              ></v-textarea>
             </v-form>
           </v-card>
         </v-col>
@@ -271,6 +278,8 @@ import { mapActions } from "vuex";
 export default {
   name: "Dashboard",
   data: () => ({
+    content: null,
+    userList: null,
     tab: null,
     text: "center",
     fill: true,
@@ -382,44 +391,6 @@ export default {
     ],
     roles: ["Teacher", "Student", "Worker"],
     status: ["Active", "Teaching", "Absent"],
-    // users: [
-    //   {
-    //     name: "A",
-    //     email: "a@a.a",
-    //     status: "Active",
-    //     role: "User",
-    //   },
-    //   {
-    //     name: "B",
-    //     email: "a@a.a",
-    //     status: "Active",
-    //     role: "User",
-    //   },
-    //   {
-    //     name: "C",
-    //     email: "a@a.a",
-    //     status: "Active",
-    //     role: "User",
-    //   },
-    //   {
-    //     name: "D",
-    //     email: "a@a.a",
-    //     status: "Active",
-    //     role: "User",
-    //   },
-    //   {
-    //     name: "E",
-    //     email: "a@a.a",
-    //     status: "Active",
-    //     role: "User",
-    //   },
-    //   {
-    //     name: "F",
-    //     email: "a@a.a",
-    //     status: "Active",
-    //     role: "Admin",
-    //   },
-    // ],
     itemsNoc: [
       {
         action: "15 min",
@@ -439,6 +410,9 @@ export default {
     },
   },
   methods: {
+    postNotification(content, userList) {
+      this.$store.dispatch("postNotice", { content, userList });
+    },
     close() {
       this.dialog = false;
     },
@@ -446,6 +420,11 @@ export default {
       if (status == "Banned") return "red";
       else if (status == "Morderate" || status == "Pending") return "orange";
       else return "green";
+    },
+    remove(item) {
+      console.log(item)
+      const index = this.users.indexOf(item._id);
+      if (index >= 0) this.user.splice(index, 1);
     },
     ...mapActions(["getUsers"]),
   },

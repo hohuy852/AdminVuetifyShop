@@ -199,7 +199,7 @@ export default {
           value: "idUser",
         },
         {
-          text: "OrderItems",
+          text: "Order Items",
           value: "OrderItems",
           width: "170px",
         },
@@ -227,6 +227,7 @@ export default {
         {
           text: "Address",
           value: "address",
+           width: '120px'
         },
         {
           text: "Apartment",
@@ -235,10 +236,12 @@ export default {
         {
           text: "City",
           value: "city",
+          width: '120px'
         },
         {
           text: "Country",
           value: "country",
+           width: '120px'
         },
         {
           text: "Postal Code",

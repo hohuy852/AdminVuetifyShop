@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import products from './modules/products'
 import users from './modules/users'
 import orders from './modules/orders'
+import notify from './modules/notify'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -15,6 +16,7 @@ export default new Vuex.Store({
   modules: {
     products,
     users,
-    orders
+    orders,
+    notify
   },
 })
