@@ -270,6 +270,7 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-snackbar v-model="notification" timeout="1500">{{ message }}</v-snackbar>
   </div>
 </template>
 
@@ -278,6 +279,8 @@ import { mapActions } from "vuex";
 export default {
   name: "Dashboard",
   data: () => ({
+    notification: false,
+    message: null,
     content: null,
     userList: null,
     tab: null,
@@ -411,7 +414,19 @@ export default {
   },
   methods: {
     postNotification(content, userList) {
-      this.$store.dispatch("postNotice", { content, userList });
+      this.$store.dispatch("postNotice", { content, userList }).then(
+        () => {
+          this.content = null;
+          this.message = "Notification post sucessful !";
+          this.notification = true;
+        },
+        (err) => {
+          this.content = null;
+          this.message = "Notification post fail !";
+          this.notification = true;
+          console.log(err.response.data)
+        }
+      );
     },
     close() {
       this.dialog = false;
@@ -422,7 +437,7 @@ export default {
       else return "green";
     },
     remove(item) {
-      console.log(item)
+      console.log(item);
       const index = this.users.indexOf(item._id);
       if (index >= 0) this.user.splice(index, 1);
     },

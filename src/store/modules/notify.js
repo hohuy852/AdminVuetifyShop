@@ -10,12 +10,7 @@ const actions = {
                 listUser: listUser.userList,
                 content: listUser.content,
             })
-            .then(
-                () => {commit('SUCCESS'), console.log('success')},
-                (err) => {
-                    console.log(err.response);
-                }
-            );
+            .then(commit('SUCCESS'));
     },
 }
 const mutations = {
