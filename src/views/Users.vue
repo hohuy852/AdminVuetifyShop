@@ -2,7 +2,7 @@
   <v-container>
     <v-card>
       <v-card-title>
-       User
+        User
         <v-spacer></v-spacer>
         <v-text-field
           v-model="search"
@@ -21,7 +21,6 @@
         :items-per-page="-1"
         :search="search"
         :loading="loading"
-
       >
         <template v-slot:top>
           <v-dialog v-model="dialog" max-width="500px">
@@ -48,60 +47,95 @@
                 <v-container>
                   <v-form class="mt-3">
                     <v-text-field
-                      label="ID"
+                      label="First Name"
                       dense
-                      outlined
-                      v-model="editedItem.id"
-                    ></v-text-field>
-                    <v-text-field
-                      label="Title"
-                      v-model="editedItem.title"
-                      dense
-                      outlined
-                    ></v-text-field>
-                    <v-file-input
-                      accept="image/*"
-                      label="Image"
-                      v-model="editedItem.img"
-                      outlined
-                      prepend-icon="mdi-camera"
-                      dense
-                    ></v-file-input>
-                    <v-text-field
-                      label="Description"
-                      v-model="editedItem.description"
-                      dense
+                      v-model="editedItem.firstName"
                       outlined
                     ></v-text-field>
                     <v-text-field
-                      label="Ventor"
-                      v-model="editedItem.ventor"
+                      label="Last Name"
+                      dense
+                      outlined
+                      v-model="editedItem.lastName"
+                    ></v-text-field>
+                    <v-text-field
+                      label="Email"
+                      v-model="editedItem.email"
                       dense
                       outlined
                     ></v-text-field>
-                    <v-text-field
-                      v-model="editedItem.category"
-                      label="Category"
+                    <v-select
+                      label="Gender"
+                      :items="gender"
                       dense
                       outlined
-                    ></v-text-field>
-                    <v-file-input
-                      v-model="editedItem.previewImage"
-                      outlined
-                      dense
-                      chips
-                      multiple
-                      accept="image/*"
-                      label="Preview Image"
-                      prepend-icon="mdi-camera"
-                    ></v-file-input>
+                      v-model="editedItem.gender"
+                    ></v-select>
                     <v-text-field
-                      v-model="editedItem.price"
-                      label="Price"
+                      label="Phone number"
                       dense
                       outlined
                       type="number"
+                      v-model="editedItem.phonenumber"
                     ></v-text-field>
+                    <!-- <v-text-field
+                      label="Birthday"
+                      dense
+                      outlined
+                      v-model="editedItem.Birthday"
+                    ></v-text-field> -->
+                    <v-select
+                      label="Status"
+                      :items="status"
+                      dense
+                      outlined
+                      v-model="editedItem.status"
+                    ></v-select>
+                    <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :return-value.sync="editedItem.DOB"
+                      transition="scale-transition"
+                      min-width="auto"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="editedItem.DOB"
+                          label="Birthday"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          v-bind="attrs"
+                          v-on="on"
+                          outlined
+                          dense
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker
+                        v-model="editedItem.DOB"
+                        no-title
+                        scrollable
+                      >
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="menu = false">
+                          Cancel
+                        </v-btn>
+                        <v-btn
+                          text
+                          color="primary"
+                          @click="$refs.menu.save(editedItem.DOB)"
+                        >
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-menu>
+                    <v-select
+                      label="Role"
+                      :items="roles"
+                      dense
+                      outlined
+                      v-model="editedItem.role"
+                    ></v-select>
                   </v-form>
                 </v-container>
               </v-card-text>
@@ -111,25 +145,30 @@
                 <v-btn color="blue darken-1" text @click="close">
                   Cancel
                 </v-btn>
-                <v-btn color="blue darken-1" @click="submitFiles" text>
-                  Add
+                <v-btn
+                  color="blue darken-1"
+                  @click="submitUser(editedItem)"
+                  text
+                  :loading="btnLoading"
+                >
+                  OK
                 </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon small class="mr-2" @click="editItem(item)">
+          <v-icon small class="mr-2" @click="editUser(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small class="mr-2" @click="deleteItem(item)">
+          <v-icon small class="mr-2" @click="deleteUser(item._id)">
             mdi-delete
           </v-icon>
           <v-icon small color="red"> fas fa-ban </v-icon>
         </template>
         <template v-slot:[`item.DOB`]="{ item }">
           <div>
-            <span v-if="item.DOB != null">{{ item.DOB.substr(0,10) }}</span>
+            <span v-if="item.DOB != null">{{ item.DOB.substr(0, 10) }}</span>
           </div>
         </template>
         <template v-slot:[`item.status`]="{ item }">
@@ -144,6 +183,7 @@
         </template>
       </v-data-table>
     </v-card>
+    <v-snackbar timeout="1500" v-model="snackBar">{{ message }}</v-snackbar>
   </v-container>
 </template>
 
@@ -153,27 +193,36 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      menu: false,
+      status: ["Active", "Inactive"],
+      roles: ["User", "Admin"],
+      gender: ["Male", "Female"],
       loading: false,
       editedIndex: -1,
+      btnLoading: false,
+      snackBar: false,
+      message: null,
       editedItem: {
-        id: "",
-        title: "",
-        img: null,
-        description: "",
-        ventor: "",
-        category: "",
-        previewImage: null,
-        price: "",
+        _id: "",
+        email: "",
+        firstName: "",
+        lastName: "",
+        status: "",
+        role: "",
+        DOB: "",
+        gender: "",
+        phonenumber: "",
       },
       defaultItem: {
-        id: "",
-        title: "",
-        img: null,
-        description: "",
-        ventor: "",
-        category: "",
-        previewImage: null,
-        price: "",
+        _id: "",
+        email: "",
+        firstName: "",
+        lastName: "",
+        status: "",
+        role: "",
+        DOB: "",
+        gender: "",
+        phonenumber: "",
       },
       search: "",
       dialog: false,
@@ -237,6 +286,14 @@ export default {
     };
   },
   computed: {
+    cDate: {
+      get() {
+        return this.datecc;
+      },
+      set(value) {
+        this.date = value;
+      },
+    },
     formTitle() {
       return "";
     },
@@ -256,9 +313,48 @@ export default {
     },
     close() {
       this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
     },
-    submitFiles() {},
     ...mapActions(["getUsers"]),
+    editUser(item) {
+      this.dialog = true;
+      this.editedIndex = this.users.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+    },
+    deleteUser(idUser) {
+      this.$store.dispatch("deleteUser", idUser).then(
+        () => {
+          console.log("deleted");
+        },
+        (err) => {
+          console.log(err.response.data);
+        }
+      );
+    },
+    submitUser(user) {
+      this.btnLoading = true;
+      this.$store.dispatch("editUser", user).then(
+        () => {
+          this.btnLoading = false;
+          this.snackBar = true;
+          this.message = "Update successful!";
+          this.dialog = false;
+          this.getUsers();
+          this.$nextTick(() => {
+            this.editedItem = Object.assign({}, this.defaultItem);
+            this.editedIndex = -1;
+          });
+        },
+        (err) => {
+          this.btnLoading = false;
+          this.snackBar = true;
+          this.message = err.response.data;
+        }
+      );
+    },
   },
   mounted() {
     this.loading = true;

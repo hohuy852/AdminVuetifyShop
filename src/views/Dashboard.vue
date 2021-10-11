@@ -259,6 +259,7 @@
               :items="orders"
               disable-sort
               hide-default-footer
+              :items-per-page=5
             >
               <template v-slot:[`item.status`]="{ item }">
                 <v-chip :color="getColor(item.status)" dark small>
@@ -324,8 +325,8 @@ export default {
 
     headers: [
       {
-        text: "Name",
-        value: "name",
+        text: "ID",
+        value: "_id",
       },
       {
         text: "Email",
@@ -344,7 +345,7 @@ export default {
     oHeaders: [
       {
         text: "OrderID",
-        value: "orderId",
+        value: "_id",
       },
       {
         text: "Item",
@@ -358,38 +359,6 @@ export default {
       {
         text: "Total",
         value: "total",
-      },
-    ],
-    orders: [
-      {
-        orderId: 1,
-        item: "Product Name",
-        status: "Pending",
-        total: 11.3,
-      },
-      {
-        orderId: 2,
-        item: "Product Name",
-        status: "Paid",
-        total: 11.3,
-      },
-      {
-        orderId: 3,
-        item: "Product Name",
-        status: "Pending",
-        total: 11.3,
-      },
-      {
-        orderId: 4,
-        item: "Product Name",
-        status: "Pending",
-        total: 11.3,
-      },
-      {
-        orderId: 5,
-        item: "Product Name",
-        status: "Paid",
-        total: 11.3,
       },
     ],
     roles: ["Teacher", "Student", "Worker"],
@@ -411,22 +380,41 @@ export default {
     users() {
       return this.$store.state.users.users.allUser;
     },
+    orders(){
+      return this.$store.state.orders.orders.allOrder
+    }
   },
   methods: {
     postNotification(content, userList) {
-      this.$store.dispatch("postNotice", { content, userList }).then(
-        () => {
-          this.content = null;
-          this.message = "Notification post sucessful !";
-          this.notification = true;
-        },
-        (err) => {
-          this.content = null;
-          this.message = "Notification post fail !";
-          this.notification = true;
-          console.log(err.response.data)
-        }
-      );
+      if (this.userList == null) {
+        this.$store.dispatch("postBanner", content).then(
+          () => {
+            this.content = null;
+            this.message = "Notification post banner sucessful !";
+            this.notification = true;
+          },
+          (err) => {
+            this.content = null;
+            this.message = "Notification post banner fail !";
+            this.notification = true;
+            console.log(err.response.data);
+          }
+        );
+      } else {
+        this.$store.dispatch("postNotice", { content, userList }).then(
+          () => {
+            this.content = null;
+            this.message = "Notification post sucessful !";
+            this.notification = true;
+          },
+          (err) => {
+            this.content = null;
+            this.message = "Notification post fail !";
+            this.notification = true;
+            console.log(err.response.data);
+          }
+        );
+      }
     },
     close() {
       this.dialog = false;
@@ -441,10 +429,19 @@ export default {
       const index = this.users.indexOf(item._id);
       if (index >= 0) this.user.splice(index, 1);
     },
-    ...mapActions(["getUsers"]),
+    ...mapActions(["getUsers", "getOrders"]),
   },
   mounted() {
     this.getUsers().then(
+      () => {
+        this.loading = false;
+      },
+      (err) => {
+        console.log(err.response.data);
+        this.loading = false;
+      }
+    );
+     this.getOrders().then(
       () => {
         this.loading = false;
       },

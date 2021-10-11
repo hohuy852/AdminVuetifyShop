@@ -17,8 +17,7 @@
         :headers="headers"
         item-key="name"
         :items="orders"
-        disable-sort
-        :items-per-page="-1"
+        :items-per-page="15"
         :search="search"
         :loading="loading"
       >
@@ -108,9 +107,9 @@
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">
-           mdi-keyboard-return
+            mdi-keyboard-return
           </v-icon>
-          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          <v-icon small @click="deleteOrder(item._id)"> mdi-delete </v-icon>
         </template>
         <template v-slot:[`item.OrderItems`]="{ item }">
           <div v-for="(product, i) in item.OrderItems" :key="i">
@@ -227,7 +226,7 @@ export default {
         {
           text: "Address",
           value: "address",
-           width: '120px'
+          width: "120px",
         },
         {
           text: "Apartment",
@@ -236,12 +235,12 @@ export default {
         {
           text: "City",
           value: "city",
-          width: '120px'
+          width: "120px",
         },
         {
           text: "Country",
           value: "country",
-           width: '120px'
+          width: "120px",
         },
         {
           text: "Postal Code",
@@ -298,6 +297,16 @@ export default {
       if (status == "Banned") return "red";
       else if (status == "Morderate" || status == "Pending") return "orange";
       else return "green";
+    },
+    deleteOrder(idOrder) {
+      this.$store.dispatch("deleteOrder", idOrder).then(
+        () => {
+          console.log("deleted");
+        },
+        (err) => {
+          console.log(err.response.data);
+        }
+      );
     },
   },
   mounted() {

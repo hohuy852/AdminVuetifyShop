@@ -20,7 +20,7 @@
         disable-sort
         :items-per-page="-1"
         :search="search"
-        :loading = "loading"
+        :loading="loading"
       >
         <template v-slot:top>
           <v-dialog v-model="dialog" max-width="500px">
@@ -110,7 +110,9 @@
                 <v-btn color="blue darken-1" text @click="close">
                   Cancel
                 </v-btn>
-                <v-btn color="blue darken-1" @click="submitFiles" text> Add </v-btn>
+                <v-btn color="blue darken-1" @click="save(editedItem)" text>
+                  Save
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -124,13 +126,18 @@
         <template v-slot:[`item.previewImage`]="{ item }">
           <v-row>
             <v-col v-for="(image, i) in item.previewImage" :key="i">
-              <v-img  :src="image.src" width="40px" height="40px"> </v-img>
+              <v-img :src="image" width="40px" height="40px"> </v-img>
             </v-col>
           </v-row>
         </template>
         <template v-slot:[`item.img`]="{ item }">
           <div class="py-2">
-            <v-img  :src="item.img" width="80px" height="50px"> </v-img>
+            <v-img :src="item.img" width="80px" height="50px"> </v-img>
+          </div>
+        </template>
+        <template v-slot:[`item.price`]="{ item }">
+          <div>
+            <span>{{ item.price }} $</span>
           </div>
         </template>
       </v-data-table>
@@ -140,7 +147,6 @@
 
 <script>
 import { mapActions } from "vuex";
-import axios from 'axios'
 export default {
   data() {
     return {
@@ -153,7 +159,7 @@ export default {
         description: "",
         ventor: "",
         category: "",
-        previewImage: null,
+        previewImage: [],
         price: "",
       },
       defaultItem: {
@@ -221,51 +227,34 @@ export default {
   methods: {
     ...mapActions(["getProducts"]),
     close() {
-      this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
     },
     editItem(item) {
       this.editedIndex = this.products.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
-   submitFiles() {
-    if (this.editedItem.previewImage) {
-        let formData = new FormData();
-
-        // files
-        for (let file of this.editedItem.previewImage) {
-            formData.append("files", file, file.name);
-        }
-
-        // additional data
-        formData.append("test", "foo bar");
-
-        axios
-            .post("https://web-demo.online/upload", formData)
-            .then(response => {
-                //console.log("Success!");
-                console.log({ response });
-            })
-            .catch(error => {
-                console.log({ error });
-            });
-    } else {
-        console.log("there are no files.");
-    }
-}
+    save(product) {
+      if (this.editedIndex > -1) {
+        this.$store.dispatch("updateProduct", product)
+      } else {
+        this.$store.dispatch("addProduct", product);
+      }
+      this.close();
+    },
   },
   mounted() {
-    this.loading = true
+    this.loading = true;
     this.getProducts().then(
       () => {
-        this.loading = false
+        this.loading = false;
       },
       (err) => {
-        this.loading = false
+        this.loading = false;
         console.log(err.response.data);
       }
     );

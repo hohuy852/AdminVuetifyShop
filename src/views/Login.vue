@@ -10,7 +10,7 @@
     <v-responsive class="mx-auto text-center" style="max-width: 500px">
       <v-card>
         <h2 class="py-4">Login</h2>
-        <v-divider aria-orientation="horizontal"></v-divider>
+        <!-- <v-divider aria-orientation="horizontal"></v-divider> -->
         <v-form ref="form" class="pa-7" @submit.prevent="handleLogin(user)">
           <v-text-field
             v-model="user.email"
@@ -32,12 +32,6 @@
             type="submit"
             :loading="isLoading"
             >Log in</v-btn
-          >
-          <router-link
-            to="/forgot-password"
-            style="text-decoration: none"
-            class="font-weight-bold"
-            >Forgorten Password?</router-link
           >
         </v-form>
       </v-card>
@@ -77,7 +71,6 @@ export default {
       this.isLoading = true;
       this.$store.dispatch("auth/login", user).then(
         () => {
-          this.$store.state.cart.navId++;
           this.$router.push("/");
         },
         (error) => {
@@ -87,9 +80,7 @@ export default {
       );
     },
   },
-  created() {
-
-  },
+  created() {},
 };
 </script>
 

@@ -12,6 +12,13 @@ const actions = {
             })
             .then(commit('SUCCESS'));
     },
+    postBanner({ commit }, content) {
+        return axios
+            .post("https://web-demo.online/admin/notify_banner", {
+                content: content
+            })
+            .then(commit('SUCCESS'))
+    }
 }
 const mutations = {
     SUCCESS(state) {

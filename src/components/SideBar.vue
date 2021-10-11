@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer v-model="drawer" app v-if="auth">
       <v-list>
         <v-list-item class="px-2">
           <v-img src="vuetify-svg.svg"></v-img>
@@ -23,7 +23,7 @@
     </v-navigation-drawer>
 
     <v-app-bar app flat>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="drawer = !drawer" v-if="auth"></v-app-bar-nav-icon>
 
       <v-toolbar-title>Admin</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -58,9 +58,14 @@ export default {
         title: 'Orders',
         icon: 'fas fa-truck',
         route: '/orders'
+      },
+      {
+        title: 'Discount',
+        icon: 'fas fa-tags',
+        route: '/discount-code'
       }
     ],
-
+    auth:true,
     drawer: true,
   }),
 };
