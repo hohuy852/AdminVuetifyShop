@@ -9,13 +9,20 @@ const actions = {
             .get(API + 'admin/user')
             .then(response => commit('GET_USERS', response.data))
     },
-    deleteUser({ commit }, idUser) {
+    deleteUser({ commit }, user) {
         return axios
-            .delete(API + 'admin/user', {
-                idUser: idUser
-            })
+            .delete(API + 'admin/user',
+                {
+                    data:
+                    {
+                        idUser: user._id
+                    }
+                }
+            )
             .then(
-                commit('DELETE_SUCCESS')
+                commit('DELETE_SUCCESS'),
+                console.log(user._id)
+
             )
     },
     async editUser({ commit }, user) {
@@ -30,14 +37,11 @@ const actions = {
                     gender: user.gender,
                     phonenumber: user.phonenumber,
                     role: user.role,
-                    wishlist: [],
                     DOB: new Date(user.DOB).toISOString(),
-                    cart: []
                 }
             })
             .then(
                 () => commit('EDIT_SUCCESS'),
-                console.log(user)
             )
             .catch(err => {
                 console.log(err)
@@ -51,13 +55,13 @@ const actions = {
                 lastName: user.lastName,
                 gender: user.gender,
                 phonenumber: user.phonenumber,
-                wishlist: [],
+                role: user.role,
                 DOB: new Date(user.DOB).toISOString(),
-                cart: []
+
             })
             .then(
                 () => commit('ADD_SUCCESS'),
-                console.log(user)
+
             )
             .catch(err => {
                 console.log(err)
@@ -65,7 +69,7 @@ const actions = {
     }
 }
 const mutations = {
-    GET_USERS(statem, resUsers) {
+    GET_USERS(state, resUsers) {
         state.users = resUsers
     },
     DELETE_SUCCESS(state) {
@@ -73,6 +77,9 @@ const mutations = {
     },
     EDIT_SUCCESS(state) {
         state
+    },
+    ADD_SUCCESS(){
+
     }
 }
 const getters = {

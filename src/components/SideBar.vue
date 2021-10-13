@@ -63,6 +63,11 @@ export default {
         title: 'Discount',
         icon: 'fas fa-tags',
         route: '/discount-code'
+      },
+       {
+        title: 'Category',
+        icon: 'mdi-bookshelf',
+        route: '/category'
       }
     ],
     auth:true,

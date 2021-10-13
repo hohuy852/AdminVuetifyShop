@@ -12,7 +12,9 @@ const actions = {
     deleteOrder({ commit }, idOrder) {
         return axios
             .delete(API + 'admin/order', {
-                idOrder: '615e68f9e933cad168215c46'
+                data: {
+                    idOrder: idOrder
+                }
             })
             .then(
                 commit('DELETE_SUCCESS'),
@@ -24,8 +26,8 @@ const mutations = {
     GET_ORDERS(state, orders) {
         state.orders = orders
     },
-    DELETE_SUCCESS(state){
-        state
+    DELETE_SUCCESS() {
+
     }
 }
 const getters = {

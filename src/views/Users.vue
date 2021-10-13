@@ -90,6 +90,7 @@
                       dense
                       outlined
                       v-model="editedItem.status"
+                      disabled
                     ></v-select>
                     <v-menu
                       ref="menu"
@@ -147,7 +148,7 @@
                 </v-btn>
                 <v-btn
                   color="blue darken-1"
-                  @click="submitUser(editedItem)"
+                  @click="ok(editedItem)"
                   text
                   :loading="btnLoading"
                 >
@@ -161,7 +162,7 @@
           <v-icon small class="mr-2" @click="editUser(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small class="mr-2" @click="deleteUser(item._id)">
+          <v-icon small class="mr-2" @click="deleteUser(item)">
             mdi-delete
           </v-icon>
           <v-icon small color="red"> fas fa-ban </v-icon>
@@ -286,6 +287,9 @@ export default {
     };
   },
   computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "Add User" : "Edit User";
+    },
     cDate: {
       get() {
         return this.datecc;
@@ -293,9 +297,6 @@ export default {
       set(value) {
         this.date = value;
       },
-    },
-    formTitle() {
-      return "";
     },
     users() {
       return this.$store.getters.users.allUser;
@@ -324,36 +325,51 @@ export default {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
     },
-    deleteUser(idUser) {
-      this.$store.dispatch("deleteUser", idUser).then(
+    deleteUser(user) {
+      this.$store.dispatch("deleteUser", user).then(
         () => {
-          console.log("deleted");
+          this.getUsers();
         },
         (err) => {
           console.log(err.response.data);
         }
       );
     },
-    submitUser(user) {
-      this.btnLoading = true;
-      this.$store.dispatch("editUser", user).then(
-        () => {
-          this.btnLoading = false;
-          this.snackBar = true;
-          this.message = "Update successful!";
-          this.dialog = false;
-          this.getUsers();
-          this.$nextTick(() => {
-            this.editedItem = Object.assign({}, this.defaultItem);
-            this.editedIndex = -1;
-          });
-        },
-        (err) => {
-          this.btnLoading = false;
-          this.snackBar = true;
-          this.message = err.response.data;
-        }
-      );
+    ok(user) {
+      if (this.editedIndex > -1) {
+        this.btnLoading = true;
+        this.$store.dispatch("editUser", user).then(
+          () => {
+            this.btnLoading = false;
+            this.snackBar = true;
+            this.message = "Update successful!";
+            this.getUsers();
+            this.close();
+          },
+          (err) => {
+            this.btnLoading = false;
+            this.snackBar = true;
+            this.message = err.response.data;
+          }
+        );
+      } else {
+        //Add user
+        this.btnLoading = true;
+        this.$store.dispatch("addUser", user).then(
+          () => {
+            this.btnLoading = false;
+            this.snackBar = true;
+            this.message = "Add successful!";
+            this.getUsers();
+            this.close();
+          },
+          (err) => {
+            this.btnLoading = false;
+            this.snackBar = true;
+            this.message = err.response.data;
+          }
+        );
+      }
     },
   },
   mounted() {

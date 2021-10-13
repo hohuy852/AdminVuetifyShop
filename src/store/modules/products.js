@@ -32,10 +32,12 @@ const actions = {
                 response => commit('GET_PRODUCT', response.data.entries)
             )
     },
-    async deleteProduct({ commit }, idProduct) {
+    async deleteProduct({ commit }, product) {
         return axios
             .delete(API + 'admin/product', {
-                idProduct: idProduct
+                data: {
+                    idProduct: product._id
+                }
             })
             .then(
                 commit('DELETE_SUCCESS')
@@ -86,11 +88,11 @@ const mutations = {
     DELETE_SUCCESS(state) {
         state
     },
-    UPDATE_SUCCESS(){
+    UPDATE_SUCCESS() {
 
     },
-    ADD_SUCCESS(){
-        
+    ADD_SUCCESS() {
+
     }
 }
 const getters = {

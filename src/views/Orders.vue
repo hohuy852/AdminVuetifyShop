@@ -301,7 +301,7 @@ export default {
     deleteOrder(idOrder) {
       this.$store.dispatch("deleteOrder", idOrder).then(
         () => {
-          console.log("deleted");
+          this.getOrders()
         },
         (err) => {
           console.log(err.response.data);

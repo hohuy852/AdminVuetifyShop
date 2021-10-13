@@ -148,41 +148,42 @@
           </v-card>
         </v-col>
         <v-col cols="12" sm="6">
-          <v-card height="260px">
-            <v-card-title> Revenue </v-card-title>
-            <v-row>
-              <v-col cols="12" sm="4">
-                <v-list-item three-line>
-                  <v-list-item-content>
-                    <v-list-item-title class="headline mb-1 black--text">
-                      2.5578 $
-                    </v-list-item-title>
-                    <v-list-item-subtitle class="grey--text"
-                      >Last 24 hours</v-list-item-subtitle
-                    >
-                  </v-list-item-content>
-                </v-list-item>
-              </v-col>
-              <v-col cols="12" sm="8">
-                <v-sparkline
-                  :value="value"
-                  :smooth="radius || false"
-                  :padding="padding"
-                  :line-width="width"
-                  :stroke-linecap="lineCap"
-                  :fill="fills"
-                  :type="type"
-                  :auto-line-width="autoLineWidth"
-                  auto-draw
-                  color="red"
-                >
-                </v-sparkline>
-              </v-col>
-            </v-row>
+          <v-card class="d-flex flex-column flex-grow-1 h-full">
+            <div class="d-flex flex-column flex-grow-1">
+              <v-card-title>Revenue</v-card-title>
+              <div
+                class="d-flex flex-column flex-grow-1"
+                style="position: relative"
+              >
+                <div class="px-2 pb-2">
+                  <div class="d-flex align-center">
+                    <div class="text-h4 pl-2">432</div>
+                    <v-spacer></v-spacer>
+                    <div class="d-flex flex-column text-right">
+                      <div class="font-weight-bold green--text">
+                        <v-icon color="green">mdi mdi-arrow-top-right</v-icon
+                        >3.4%
+                      </div>
+                      <div class="caption">vs last week</div>
+                    </div>
+                  </div>
+                </div>
+                <v-spacer></v-spacer>
+                <div style="min-height: 60px">
+                  <apexchart
+                    height="200px"
+                    type="area"
+                    :options="options"
+                    :series="series"
+
+                  ></apexchart>
+                </div>
+              </div>
+            </div>
           </v-card>
         </v-col>
         <v-col cols="12" sm="6">
-          <v-card height="260px">
+          <v-card height="315px">
             <v-card-title>
               Noctification
               <v-spacer></v-spacer>
@@ -220,7 +221,7 @@
                 v-model="content"
                 outlined
                 label="Content"
-                height="90"
+                height="140"
               ></v-textarea>
             </v-form>
           </v-card>
@@ -259,7 +260,7 @@
               :items="orders"
               disable-sort
               hide-default-footer
-              :items-per-page=5
+              :items-per-page="5"
             >
               <template v-slot:[`item.status`]="{ item }">
                 <v-chip :color="getColor(item.status)" dark small>
@@ -289,13 +290,50 @@ export default {
     fill: true,
     padding: 8,
     radius: 10,
+    categories: ["1 Feb", "2 Feb", "3 Feb", "4 Feb", "5 Feb", "6 Feb", "7 Feb"],
     value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+    options: {
+      chart: {
+        id: "vuechart-example",
+        height: "60px",
+        toolbar: {
+          show: false,
+        },
+        sparkline: {
+          enabled: true,
+        },
+      },
+      xaxis: {
+        categories: [
+          "1 Feb",
+          "2 Feb",
+          "3 Feb",
+          "4 Feb",
+          "5 Feb",
+          "6 Feb",
+          "7 Feb",
+        ],
+      },
+      stroke: {
+        curve: "smooth",
+      },
+      tooltip: {
+        enabled: true,
+      },
+      grid: {
+        show: false,
+      },
+      // dataLabels: {
+      //   enabled: false,
+      // },
+    },
+    series: [
+      {
+        name: "$",
+        data: [30, 40, 45, 50, 49, 60, 70],
+      },
+    ],
     width: 2,
-    lineCap: "round",
-    type: "trend",
-    autoLineWidth: false,
-    fills: false,
-    items: ["Foo", "Bar", "Fizz", "Buzz"],
     selected: [],
     dialog: false,
     //singleSelected: false,
@@ -380,9 +418,22 @@ export default {
     users() {
       return this.$store.state.users.users.allUser;
     },
-    orders(){
-      return this.$store.state.orders.orders.allOrder
-    }
+    orders() {
+      return this.$store.state.orders.orders.allOrder;
+    },
+    timeFrom() {
+      let X = 7;
+      var dates = [];
+      for (let I = 0; I < Math.abs(X); I++) {
+        dates.push(
+          new Date(
+            new Date().getTime() -
+              (X >= 0 ? I : I - I - I) * 24 * 60 * 60 * 1000
+          ).toLocaleString()
+        );
+      }
+      return dates;
+    },
   },
   methods: {
     postNotification(content, userList) {
@@ -441,7 +492,7 @@ export default {
         this.loading = false;
       }
     );
-     this.getOrders().then(
+    this.getOrders().then(
       () => {
         this.loading = false;
       },

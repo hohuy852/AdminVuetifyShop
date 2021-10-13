@@ -121,7 +121,7 @@
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+          <v-icon small @click="deleteProduct(item)"> mdi-delete </v-icon>
         </template>
         <template v-slot:[`item.previewImage`]="{ item }">
           <v-row>
@@ -240,11 +240,35 @@ export default {
     },
     save(product) {
       if (this.editedIndex > -1) {
-        this.$store.dispatch("updateProduct", product)
+        this.$store.dispatch("updateProduct", product).then(
+          () => {
+            this.getProducts();
+          },
+          (err) => {
+            console.log(err.response.data);
+          }
+        );
       } else {
-        this.$store.dispatch("addProduct", product);
+        this.$store.dispatch("addProduct", product).then(
+          () => {
+            this.getProducts();
+          },
+          (err) => {
+            console.log(err.response.data);
+          }
+        );
       }
       this.close();
+    },
+    deleteProduct(product) {
+      this.$store.dispatch("deleteProduct", product).then(
+        () => {
+          this.getProducts();
+        },
+        (err) => {
+          console.log(err.response.data);
+        }
+      );
     },
   },
   mounted() {
