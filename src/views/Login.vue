@@ -1,39 +1,37 @@
 <template>
   <v-container>
-    <div class="text-center white--text">
-      <h1>Vuetify Store Account</h1>
-      <div class="text-h7 text-md-h5 mt-2 mb-4">
-        Receive fantastic promotions with the store account and have access to
-        your order history.
-      </div>
-    </div>
     <v-responsive class="mx-auto text-center" style="max-width: 500px">
-      <v-card>
-        <h2 class="py-4">Login</h2>
+      <v-card class="text-center pa-1" elevation="2">
+        <v-card-title class="justify-center display-1 mb-2"
+          >Welcome</v-card-title
+        >
+        <v-card-subtitle>Sign in to your account</v-card-subtitle>
         <!-- <v-divider aria-orientation="horizontal"></v-divider> -->
-        <v-form ref="form" class="pa-7" @submit.prevent="handleLogin(user)">
-          <v-text-field
-            v-model="user.email"
-            label="Email"
-            required
-            outlined
-          ></v-text-field>
-          <v-text-field
-            v-model="user.password"
-            label="Password"
-            outlined
-            type="password"
-          ></v-text-field>
-          <div v-html="message" style="color: red"></div>
-          <v-btn
-            class="primary mb-3"
-            x-large
-            block
-            type="submit"
-            :loading="isLoading"
-            >Log in</v-btn
-          >
-        </v-form>
+        <v-card-text>
+          <v-form ref="form" class="pa-7" @submit.prevent="handleLogin(user)">
+            <v-text-field
+              v-model="user.email"
+              label="Email"
+              required
+              outlined
+            ></v-text-field>
+            <v-text-field
+              v-model="user.password"
+              label="Password"
+              outlined
+              type="password"
+            ></v-text-field>
+            <div v-html="message" style="color: red"></div>
+            <v-btn
+              class="primary mb-3"
+              x-large
+              block
+              type="submit"
+              :loading="isLoading"
+              >Log in</v-btn
+            >
+          </v-form>
+        </v-card-text>
       </v-card>
     </v-responsive>
   </v-container>

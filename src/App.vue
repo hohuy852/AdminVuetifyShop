@@ -1,6 +1,6 @@
 <template>
   <v-app>
-   <SideBar />
+   <SideBar v-if="loggedIn" />
     <v-main>
      <router-view></router-view>
     </v-main>
@@ -19,7 +19,12 @@ export default {
   },
 
   data: () => ({
-    //
+    
   }),
+  computed:{
+    loggedIn(){
+      return this.$store.state.auth.status.loggedIn
+    }
+  }
 };
 </script>
