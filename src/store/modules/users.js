@@ -49,7 +49,7 @@ const actions = {
     },
     async addUser({ commit }, user) {
         return axios
-            .patch(API + 'admin/register', {
+            .post(API + 'admin/register', {
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,

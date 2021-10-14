@@ -72,7 +72,9 @@ const actions = {
         formData.append("price", product.price);
         formData.append("description", product.description);
         formData.append("category", product.category);
-
+        for (let file of product.previewImage) {
+            formData.append("previewImage", file);
+        }
         return axios
             .post(API + 'admin/product', formData)
             .then(commit('ADD_SUCCESS'))
