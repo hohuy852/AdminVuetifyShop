@@ -36,7 +36,13 @@ const routes = [
   {
     path: '/category',
     name: 'Category',
-    component: () => import(/* webpackChunkName: "login" */ '../views/Category.vue'),
+    component: () => import(/* webpackChunkName: "Category" */ '../views/Category.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/discount-code',
+    name: 'Discount',
+    component: () => import(/* webpackChunkName: "Discount" */ '../views/Discount.vue'),
     meta: { requiresAuth: true }
   }
 
