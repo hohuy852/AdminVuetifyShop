@@ -7,6 +7,7 @@ import notify from './modules/notify'
 import auth from './modules/auth'
 import categories from './modules/categories'
 import discount from './modules/discount'
+import revenue from './modules/revenue'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     notify,
     auth,
     categories,
-    discount
+    discount,
+    revenue
   },
 })

@@ -29,12 +29,16 @@ const actions = {
     },
     deleteDiscount({ commit }, discount) {
         return axios
-        .delete(API + 'admin/discount',{
-            code: discount.code,
-        })
-        .then(
-            commit('ADD_SUCCESS')
-        )
+            .delete(API + 'admin/discount', {
+                data: {
+                    code: discount.code,
+                }
+
+            })
+            .then(
+                commit('ADD_SUCCESS'), 
+            )
+            
     },
     updateDiscount({ commit }, discount) {
         return axios
@@ -54,7 +58,7 @@ const mutations = {
     GET_DISCOUNT(state, discount) {
         state.discount = discount
     },
-    ADD_SUCCESS(){
+    ADD_SUCCESS() {
 
     }
 }

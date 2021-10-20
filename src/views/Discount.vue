@@ -257,11 +257,11 @@ export default {
     },
     editCategory(item) {
       this.dialog = true;
-      this.editedIndex = this.categories.indexOf(item);
+      this.editedIndex = this.discount.indexOf(item);
       this.editedItem = Object.assign({}, item);
     },
-    deleteCategory(category) {
-      this.$store.dispatch("deleteCategory", category).then(
+    deleteCategory(discount) {
+      this.$store.dispatch("deleteDiscount", discount).then(
         () => {
          this.getDiscount();
         },

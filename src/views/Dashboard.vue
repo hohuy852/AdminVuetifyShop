@@ -122,7 +122,7 @@
               <template v-for="(item, i) in rankings">
                 <v-list-item :key="i">
                   <v-list-item-avatar tile width="70">
-                    <v-img :src="item.avatar"></v-img>
+                    <v-img :src="item.img"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title v-html="item.title"></v-list-item-title>
@@ -131,16 +131,28 @@
                     ></v-list-item-subtitle>
                   </v-list-item-content>
                   <v-spacer :key="item.title"></v-spacer>
-                  <span>{{ item.ranking }}</span>
+                  <span>Sold: {{ item.count }}</span>
                   <v-icon
-                    v-if="item.ranking > 0"
+                    v-if="i == 0"
                     :key="i"
-                    color="green"
+                    color="orange"
                     class="ml-2"
-                    >fas fa-long-arrow-alt-up</v-icon
+                    >mdi-trophy</v-icon
                   >
-                  <v-icon v-else :key="i" color="red" class="ml-2"
-                    >fas fa-long-arrow-alt-down</v-icon
+                   <v-icon
+                    v-else-if="i == 1"
+                    :key="i"
+                    color="#cfc8c6"
+                    class="ml-2"
+                    >mdi-trophy</v-icon
+                  >
+                  
+                   <v-icon
+                    v-else
+                    :key="i"
+                    color="#CD7F32"
+                    class="ml-2"
+                    >mdi-trophy</v-icon
                   >
                 </v-list-item>
               </template>
@@ -157,14 +169,14 @@
               >
                 <div class="px-2 pb-2">
                   <div class="d-flex align-center">
-                    <div class="text-h4 pl-2">432</div>
+                    <div class="text-h4 pl-2">{{ revenue }}$</div>
                     <v-spacer></v-spacer>
                     <div class="d-flex flex-column text-right">
                       <div class="font-weight-bold green--text">
                         <v-icon color="green">mdi mdi-arrow-top-right</v-icon
                         >3.4%
                       </div>
-                      <div class="caption">vs last week</div>
+                      <div class="caption">vs last month</div>
                     </div>
                   </div>
                 </div>
@@ -172,10 +184,10 @@
                 <div style="min-height: 60px">
                   <apexchart
                     height="200px"
+                    ref="chart"
                     type="area"
                     :options="options"
                     :series="series"
-
                   ></apexchart>
                 </div>
               </div>
@@ -285,6 +297,7 @@ export default {
     message: null,
     content: null,
     userList: null,
+    revenue: null,
     tab: null,
     text: "center",
     fill: true,
@@ -295,7 +308,7 @@ export default {
     options: {
       chart: {
         id: "vuechart-example",
-        height: "60px",
+        height: "200px",
         toolbar: {
           show: false,
         },
@@ -329,37 +342,38 @@ export default {
     },
     series: [
       {
-        name: "$",
-        data: [30, 40, 45, 50, 49, 60, 70],
+        name: "Revenue",
+        data: [0, 0, 0, 0, 0, 0, 0],
       },
     ],
     width: 2,
     selected: [],
     dialog: false,
     //singleSelected: false,
-    rankings: [
-      {
-        avatar:
-          "https://cdn.shopify.com/s/files/1/2695/0984/products/new-main.png?v=1611181256",
-        title: "Zero Theme PRO",
-        subtitle: "12.98$",
-        ranking: 1,
-      },
-      {
-        avatar:
-          "https://cdn.shopify.com/s/files/1/2695/0984/products/main_1ce7d3ed-f3bd-4357-b8d9-420adb7680d9.png?v=1591233287",
-        title: "Flairo Theme PRO",
-        subtitle: "9.83$",
-        ranking: -1,
-      },
-      {
-        avatar:
-          "https://cdn.shopify.com/s/files/1/2695/0984/products/alpha-main.png?v=1582695312",
-        title: "Alpha Theme Bundle",
-        subtitle: "4.18$",
-        ranking: 3,
-      },
-    ],
+    rankings: null,
+    //[
+    //   {
+    //     avatar:
+    //       "https://cdn.shopify.com/s/files/1/2695/0984/products/new-main.png?v=1611181256",
+    //     title: "Zero Theme PRO",
+    //     subtitle: "12.98$",
+    //     ranking: 1,
+    //   },
+    //   {
+    //     avatar:
+    //       "https://cdn.shopify.com/s/files/1/2695/0984/products/main_1ce7d3ed-f3bd-4357-b8d9-420adb7680d9.png?v=1591233287",
+    //     title: "Flairo Theme PRO",
+    //     subtitle: "9.83$",
+    //     ranking: -1,
+    //   },
+    //   {
+    //     avatar:
+    //       "https://cdn.shopify.com/s/files/1/2695/0984/products/alpha-main.png?v=1582695312",
+    //     title: "Alpha Theme Bundle",
+    //     subtitle: "4.18$",
+    //     ranking: 3,
+    //   },
+    // ],
 
     headers: [
       {
@@ -480,7 +494,30 @@ export default {
       const index = this.users.indexOf(item._id);
       if (index >= 0) this.user.splice(index, 1);
     },
-    ...mapActions(["getUsers", "getOrders"]),
+    updateChart() {
+      let dataSeries = this.$store.getters.revenueByWeek.orders;
+      let tempData = [];
+      for (let i = 0; i < dataSeries.length; i++) {
+        tempData.push({
+          x: dataSeries[i]._id,
+          y: dataSeries[i].total,
+        });
+      }
+      this.$apexcharts.exec("vuechart-example", "updateSeries", [
+        {
+          data: tempData,
+        },
+      ]);
+      // console.log(tempData);
+    },
+    getRanking() {
+      let products = this.$store.getters.products;
+      let topProduct = products.sort((a, b) =>
+        a.count < b.count ? 1 : a.count > b.count ? -1 : 0
+      );
+      this.rankings = topProduct.slice(0,3);
+    },
+    ...mapActions(["getUsers", "getOrders", "getProducts", "getRevenueByWeek"]),
   },
   mounted() {
     this.getUsers().then(
@@ -499,6 +536,23 @@ export default {
       (err) => {
         console.log(err.response.data);
         this.loading = false;
+      }
+    );
+    this.getRevenueByWeek().then(
+      () => {
+        this.revenue = this.$store.getters.revenueByWeek.sum;
+        this.updateChart();
+      },
+      (err) => {
+        console.log(err.response.data);
+      }
+    );
+    this.getProducts().then(
+      () => {
+        this.getRanking();
+      },
+      (err) => {
+        console.log(err.response.data);
       }
     );
   },

@@ -17,7 +17,7 @@
         :headers="headers"
         item-key="name"
         :items="products"
-        disable-sort
+       
         :items-per-page="-1"
         :search="search"
         :loading="loading"
