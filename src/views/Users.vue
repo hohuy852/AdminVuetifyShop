@@ -157,12 +157,29 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+           <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h6"
+                >Are you sure you want to delete this user?</v-card-title
+              >
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeDelete"
+                  >Cancel</v-btn
+                >
+                <v-btn color="blue darken-1" text @click="deleteUser"
+                  >OK</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editUser(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small class="mr-2" @click="deleteUser(item)">
+          <v-icon small class="mr-2" @click="deleteItem(item)">
             mdi-delete
           </v-icon>
           <v-icon small color="red"> fas fa-ban </v-icon>
@@ -194,6 +211,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      dialogDelete: false,
       menu: false,
       status: ["Active", "Inactive"],
       roles: ["User", "Admin"],
@@ -227,20 +245,6 @@ export default {
       },
       search: "",
       dialog: false,
-      test: [
-        {
-          _id: "6151767330135c54093634b1",
-          email: "hohuy@example.com",
-          firstName: "ho321313",
-          lastName: "huy2132133",
-          status: "Active",
-          role: "User",
-          __v: 19,
-          DOB: "2021-09-08T00:00:00.000Z",
-          gender: "Male",
-          phonenumber: "3",
-        },
-      ],
       headers: [
         {
           text: "ID",
@@ -303,6 +307,18 @@ export default {
     },
   },
   methods: {
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+    deleteItem(item) {
+      this.editedIndex = this.users.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
     getStatusColor(status) {
       if (status == "Banned") return "red";
       else if (status == "Morderate" || status == "Pending") return "orange";
@@ -325,9 +341,10 @@ export default {
       this.editedIndex = this.users.indexOf(item);
       this.editedItem = Object.assign({}, item);
     },
-    deleteUser(user) {
-      this.$store.dispatch("deleteUser", user).then(
+    deleteUser() {
+      this.$store.dispatch("deleteUser", this.editedItem).then(
         () => {
+          this.closeDelete();
           this.getUsers();
         },
         (err) => {

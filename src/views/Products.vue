@@ -17,7 +17,6 @@
         :headers="headers"
         item-key="name"
         :items="products"
-       
         :items-per-page="-1"
         :search="search"
         :loading="loading"
@@ -116,12 +115,29 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h6"
+                >Are you sure you want to delete this product?</v-card-title
+              >
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeDelete"
+                  >Cancel</v-btn
+                >
+                <v-btn color="blue darken-1" text @click="deleteProduct"
+                  >OK</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small @click="deleteProduct(item)"> mdi-delete </v-icon>
+          <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
         </template>
         <template v-slot:[`item.previewImage`]="{ item }">
           <v-row>
@@ -150,6 +166,7 @@ import { mapActions } from "vuex";
 export default {
   data() {
     return {
+      dialogDelete: false,
       loading: false,
       editedIndex: -1,
       editedItem: {
@@ -226,6 +243,18 @@ export default {
   },
   methods: {
     ...mapActions(["getProducts"]),
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+    deleteItem(item) {
+      this.editedIndex = this.products.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -260,9 +289,10 @@ export default {
       }
       this.close();
     },
-    deleteProduct(product) {
-      this.$store.dispatch("deleteProduct", product).then(
+    deleteProduct() {
+      this.$store.dispatch("deleteProduct", this.editedItem).then(
         () => {
+          this.closeDelete();
           this.getProducts();
         },
         (err) => {
