@@ -218,7 +218,7 @@
             <v-card-title>
               Noctification
               <v-spacer></v-spacer>
-              <v-btn @click="postNotification(content, userList)"
+              <v-btn @click="postNotification(content, percent, userList)"
                 ><v-icon> mdi-bell-ring-outline</v-icon></v-btn
               >
             </v-card-title>
@@ -258,7 +258,7 @@
                   ></v-textarea>
                 </v-col>
                 <v-col cols="6" md="4">
-                  <v-text-field label="Percentage"  outlined dense type="number"></v-text-field>
+                  <v-text-field label="Percentage" v-model="percent" outlined dense type="number"></v-text-field>
                 </v-col>
               </v-row>
             </v-form>
@@ -322,6 +322,7 @@ export default {
     notification: false,
     message: null,
     content: null,
+    percent: null,
     userList: null,
     revenue: null,
     visitor: null,
@@ -456,9 +457,9 @@ export default {
     },
   },
   methods: {
-    postNotification(content, userList) {
+    postNotification(content, percent, userList) {
       if (this.userList == null) {
-        this.$store.dispatch("postBanner", content).then(
+        this.$store.dispatch("postBanner", {content, percent}).then(
           () => {
             this.content = null;
             this.message = "Notification post banner sucessful !";

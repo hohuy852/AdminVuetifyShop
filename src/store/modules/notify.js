@@ -12,12 +12,13 @@ const actions = {
             })
             .then(commit('SUCCESS'), console.log(listUser));
     },
-    postBanner({ commit }, content) {
+    postBanner({ commit }, notifyContent) {
         return axios
             .post("https://web-demo.online/admin/notify_banner", {
-                content: content
+                content: notifyContent.content,
+                percent: notifyContent.percent
             })
-            .then(commit('SUCCESS'))
+            .then(commit('SUCCESS'), console.log(notifyContent))
     }
 }
 const mutations = {
