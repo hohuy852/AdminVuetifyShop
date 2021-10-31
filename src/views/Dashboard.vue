@@ -97,22 +97,41 @@
         <v-col cols="12" sm="6">
           <v-card>
             <v-card-title>Website visitor</v-card-title>
-
-            <v-spacer></v-spacer>
-            <v-btn color="deep-purple " class="white--text mx-2">Weekly</v-btn>
-            <v-btn color="deep-purple lighten-4" class="deep-purple--text"
-              >Monthly</v-btn
-            >
-
-            <v-sparkline
-              :fill="fill"
-              :line-width="width"
-              :padding="padding"
-              :smooth="radius || false"
-              :value="value"
-              auto-draw
-              color="deep-purple"
-            ></v-sparkline>
+            <v-card-text v-if="visitor"> 
+              <div class="d-flex ">
+                <div>
+                  <p class="text-h5 font-bold text--primary">Daily</p>
+                </div>
+                <div class="ml-auto">
+                  <p class="text-h5 font-bold text--primary">{{visitor[0].count}}</p>
+                </div>
+              </div>
+               <div class="d-flex ">
+                <div>
+                  <p class="text-h5 font-bold text--primary">Weekly</p>
+                </div>
+                <div class="ml-auto">
+                  <p class="text-h5 font-bold text--primary">{{visitor[1].count}}</p>
+                </div>
+              </div>
+               <div class="d-flex ">
+                <div>
+                  <p class="text-h5 font-bold text--primary">Monthly</p>
+                </div>
+                <div class="ml-auto">
+                  <p class="text-h5 font-bold text--primary">{{visitor[2].count}}</p>
+                </div>
+              </div>
+              <v-divider></v-divider>
+                <div class="d-flex mt-5 justify-center align-center">
+                <div>
+                  <p class="text-h5 font-bold text--primary">Total:</p>
+                </div>
+                <div class="ml-auto">
+                  <p class="text-h5 font-bold text--primary">333</p>
+                </div>
+              </div>
+            </v-card-text>
           </v-card>
         </v-col>
         <v-col cols="12" sm="6">
@@ -132,26 +151,18 @@
                   </v-list-item-content>
                   <v-spacer :key="item.title"></v-spacer>
                   <span>Sold: {{ item.count }}</span>
-                  <v-icon
-                    v-if="i == 0"
-                    :key="i"
-                    color="orange"
-                    class="ml-2"
+                  <v-icon v-if="i == 0" :key="i" color="orange" class="ml-2"
                     >mdi-trophy</v-icon
                   >
-                   <v-icon
+                  <v-icon
                     v-else-if="i == 1"
                     :key="i"
                     color="#cfc8c6"
                     class="ml-2"
                     >mdi-trophy</v-icon
                   >
-                  
-                   <v-icon
-                    v-else
-                    :key="i"
-                    color="#CD7F32"
-                    class="ml-2"
+
+                  <v-icon v-else :key="i" color="#CD7F32" class="ml-2"
                     >mdi-trophy</v-icon
                   >
                 </v-list-item>
@@ -298,6 +309,7 @@ export default {
     content: null,
     userList: null,
     revenue: null,
+    visitor: null,
     tab: null,
     text: "center",
     fill: true,
@@ -426,6 +438,9 @@ export default {
   }),
   watch: {},
   computed: {
+    // totalVisitor(){
+    //     return 
+    // },
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
@@ -490,7 +505,6 @@ export default {
       else return "green";
     },
     remove(item) {
-      console.log(item);
       const index = this.users.indexOf(item._id);
       if (index >= 0) this.user.splice(index, 1);
     },
@@ -508,16 +522,22 @@ export default {
           data: tempData,
         },
       ]);
-      // console.log(tempData);
+       console.log(tempData);
     },
     getRanking() {
       let products = this.$store.getters.products;
       let topProduct = products.sort((a, b) =>
         a.count < b.count ? 1 : a.count > b.count ? -1 : 0
       );
-      this.rankings = topProduct.slice(0,3);
+      this.rankings = topProduct.slice(0, 3);
     },
-    ...mapActions(["getUsers", "getOrders", "getProducts", "getRevenueByWeek"]),
+    ...mapActions([
+      "getUsers",
+      "getOrders",
+      "getProducts",
+      "getRevenueByWeek",
+      "getVisitor",
+    ]),
   },
   mounted() {
     this.getUsers().then(
@@ -547,9 +567,18 @@ export default {
         console.log(err.response.data);
       }
     );
+
     this.getProducts().then(
       () => {
         this.getRanking();
+      },
+      (err) => {
+        console.log(err.response.data);
+      }
+    );
+    this.getVisitor().then(
+      () => {
+        this.visitor = this.$store.getters.visitor;
       },
       (err) => {
         console.log(err.response.data);
