@@ -128,7 +128,7 @@
                   <p class="text-h5 font-bold text--primary">Total:</p>
                 </div>
                 <div class="ml-auto">
-                  <p class="text-h5 font-bold text--primary">333</p>
+                  <p class="text-h5 font-bold text--primary">{{totalVisitor}}</p>
                 </div>
               </div>
             </v-card-text>
@@ -438,9 +438,11 @@ export default {
   }),
   watch: {},
   computed: {
-    // totalVisitor(){
-    //     return 
-    // },
+    totalVisitor(){
+        return this.visitor.reduce((pre, cur) => {
+            return  parseFloat(pre) + parseFloat(cur.count)
+        },0)
+    },
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
