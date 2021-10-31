@@ -10,7 +10,7 @@ const actions = {
                 listUser: listUser.userList,
                 content: listUser.content,
             })
-            .then(commit('SUCCESS'));
+            .then(commit('SUCCESS'), console.log(listUser));
     },
     postBanner({ commit }, content) {
         return axios

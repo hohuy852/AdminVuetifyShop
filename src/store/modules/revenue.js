@@ -18,7 +18,7 @@ const actions = {
             .get(API + 'admin/analytics')
             .then(
 
-                res => { commit('GET_VISITOR', res.data), console.log(res.data) }
+                res => { commit('GET_VISITOR', res.data)}
             )
     }
 }

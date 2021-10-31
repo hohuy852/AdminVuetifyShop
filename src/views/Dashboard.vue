@@ -97,38 +97,46 @@
         <v-col cols="12" sm="6">
           <v-card>
             <v-card-title>Website visitor</v-card-title>
-            <v-card-text v-if="visitor"> 
-              <div class="d-flex ">
+            <v-card-text v-if="visitor">
+              <div class="d-flex">
                 <div>
                   <p class="text-h5 font-bold text--primary">Daily</p>
                 </div>
                 <div class="ml-auto">
-                  <p class="text-h5 font-bold text--primary">{{visitor[0].count}}</p>
+                  <p class="text-h5 font-bold text--primary">
+                    {{ visitor[0].count }}
+                  </p>
                 </div>
               </div>
-               <div class="d-flex ">
+              <div class="d-flex">
                 <div>
                   <p class="text-h5 font-bold text--primary">Weekly</p>
                 </div>
                 <div class="ml-auto">
-                  <p class="text-h5 font-bold text--primary">{{visitor[1].count}}</p>
+                  <p class="text-h5 font-bold text--primary">
+                    {{ visitor[1].count }}
+                  </p>
                 </div>
               </div>
-               <div class="d-flex ">
+              <div class="d-flex">
                 <div>
                   <p class="text-h5 font-bold text--primary">Monthly</p>
                 </div>
                 <div class="ml-auto">
-                  <p class="text-h5 font-bold text--primary">{{visitor[2].count}}</p>
+                  <p class="text-h5 font-bold text--primary">
+                    {{ visitor[2].count }}
+                  </p>
                 </div>
               </div>
               <v-divider></v-divider>
-                <div class="d-flex mt-5 justify-center align-center">
+              <div class="d-flex mt-5 justify-center align-center">
                 <div>
                   <p class="text-h5 font-bold text--primary">Total:</p>
                 </div>
                 <div class="ml-auto">
-                  <p class="text-h5 font-bold text--primary">{{totalVisitor}}</p>
+                  <p class="text-h5 font-bold text--primary">
+                    {{ totalVisitor }}
+                  </p>
                 </div>
               </div>
             </v-card-text>
@@ -239,13 +247,20 @@
                 </template>
               </v-autocomplete>
             </v-card-title>
-            <v-form ref="form" class="px-4">
-              <v-textarea
-                v-model="content"
-                outlined
-                label="Content"
-                height="140"
-              ></v-textarea>
+            <v-form ref="form" class="px-4 d-flex">
+              <v-row>
+                <v-col cols="12" sm="6" md="8">
+                  <v-textarea
+                    v-model="content"
+                    outlined
+                    label="Content"
+                    height="130"
+                  ></v-textarea>
+                </v-col>
+                <v-col cols="6" md="4">
+                  <v-text-field label="Percentage"  outlined dense type="number"></v-text-field>
+                </v-col>
+              </v-row>
             </v-form>
           </v-card>
         </v-col>
@@ -348,9 +363,6 @@ export default {
       grid: {
         show: false,
       },
-      // dataLabels: {
-      //   enabled: false,
-      // },
     },
     series: [
       {
@@ -363,29 +375,6 @@ export default {
     dialog: false,
     //singleSelected: false,
     rankings: null,
-    //[
-    //   {
-    //     avatar:
-    //       "https://cdn.shopify.com/s/files/1/2695/0984/products/new-main.png?v=1611181256",
-    //     title: "Zero Theme PRO",
-    //     subtitle: "12.98$",
-    //     ranking: 1,
-    //   },
-    //   {
-    //     avatar:
-    //       "https://cdn.shopify.com/s/files/1/2695/0984/products/main_1ce7d3ed-f3bd-4357-b8d9-420adb7680d9.png?v=1591233287",
-    //     title: "Flairo Theme PRO",
-    //     subtitle: "9.83$",
-    //     ranking: -1,
-    //   },
-    //   {
-    //     avatar:
-    //       "https://cdn.shopify.com/s/files/1/2695/0984/products/alpha-main.png?v=1582695312",
-    //     title: "Alpha Theme Bundle",
-    //     subtitle: "4.18$",
-    //     ranking: 3,
-    //   },
-    // ],
 
     headers: [
       {
@@ -438,10 +427,10 @@ export default {
   }),
   watch: {},
   computed: {
-    totalVisitor(){
-        return this.visitor.reduce((pre, cur) => {
-            return  parseFloat(pre) + parseFloat(cur.count)
-        },0)
+    totalVisitor() {
+      return this.visitor.reduce((pre, cur) => {
+        return parseFloat(pre) + parseFloat(cur.count);
+      }, 0);
     },
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
@@ -524,7 +513,7 @@ export default {
           data: tempData,
         },
       ]);
-       console.log(tempData);
+      // console.log(tempData);
     },
     getRanking() {
       let products = this.$store.getters.products;
