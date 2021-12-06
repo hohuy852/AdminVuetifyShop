@@ -321,7 +321,7 @@ export default {
   data: () => ({
     notification: false,
     message: null,
-    content: null,
+    content: '',
     percent: null,
     userList: null,
     revenue: null,
