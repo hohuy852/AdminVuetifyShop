@@ -48,7 +48,7 @@ const actions = {
         formData.append("idProduct", product.id);
         formData.append("img", product.img);
         formData.append("title", product.title);
-        formData.append("price", product.price);
+        formData.append("price", parseFloat(product.price));
         formData.append("description", product.description);
         formData.append("category", product.category);
         // formData.append("previewImage", product.previewImage);

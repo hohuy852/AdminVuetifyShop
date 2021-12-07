@@ -164,23 +164,44 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h6"
+                >Are you sure you want to delete this product?</v-card-title
+              >
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeDelete"
+                  >Cancel</v-btn
+                >
+                <v-btn color="blue darken-1" text @click="deleteDiscount"
+                  >OK</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editCategory(item)">
             mdi-pencil
           </v-icon>
-          <v-icon small class="mr-2" @click="deleteCategory(item)">
+          <v-icon small class="mr-2" @click="deleteItem(item)">
             mdi-delete
           </v-icon>
         </template>
         <template v-slot:[`item.startDate`]="{ item }">
           <div>
-            <span v-if="item.startDate != null">{{ item.startDate.substr(0, 10) }}</span>
+            <span v-if="item.startDate != null">{{
+              item.startDate.substr(0, 10)
+            }}</span>
           </div>
         </template>
         <template v-slot:[`item.expireDate`]="{ item }">
           <div>
-            <span v-if="item.expireDate != null">{{ item.expireDate.substr(0, 10) }}</span>
+            <span v-if="item.expireDate != null">{{
+              item.expireDate.substr(0, 10)
+            }}</span>
           </div>
         </template>
       </v-data-table>
@@ -189,13 +210,13 @@
   </v-container>
 </template>
 
-
 <script>
 import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      status: ['Active', "Inactive"],
+      dialogDelete: false,
+      status: ["Active", "Inactive"],
       menu: false,
       menu1: false,
       loading: false,
@@ -207,14 +228,13 @@ export default {
         code: "",
         startDate: "",
         expireDate: "",
-        amount: "",  
+        amount: "",
       },
       defaultItem: {
         code: "",
         startDate: "",
         expireDate: "",
         amount: "",
-       
       },
       search: "",
       dialog: false,
@@ -248,6 +268,13 @@ export default {
     };
   },
   methods: {
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -255,15 +282,21 @@ export default {
         this.editedIndex = -1;
       });
     },
+    deleteItem(item) {
+      this.editedIndex = this.discount.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
     editCategory(item) {
       this.dialog = true;
       this.editedIndex = this.discount.indexOf(item);
       this.editedItem = Object.assign({}, item);
     },
-    deleteCategory(discount) {
-      this.$store.dispatch("deleteDiscount", discount).then(
+    deleteDiscount() {
+      this.$store.dispatch("deleteDiscount", this.editedItem).then(
         () => {
-         this.getDiscount();
+          this.getDiscount();
+          this.closeDelete();
         },
         (err) => {
           console.log(err.response.data);
@@ -281,7 +314,7 @@ export default {
             this.btnLoading = false;
             this.snackBar = true;
             this.message = "Update successful!";
-             this.getDiscount();
+            this.getDiscount();
             this.close();
           },
           (err) => {
@@ -296,7 +329,7 @@ export default {
             this.btnLoading = false;
             this.snackBar = true;
             this.message = "Add successful!";
-             this.getDiscount();
+            this.getDiscount();
             this.close();
           },
           (err) => {
@@ -321,5 +354,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

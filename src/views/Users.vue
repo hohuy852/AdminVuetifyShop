@@ -174,6 +174,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+      
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon small class="mr-2" @click="editUser(item)">
