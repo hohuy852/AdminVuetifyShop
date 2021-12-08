@@ -11,6 +11,7 @@
             v-for="item in NavItems"
             :key="item.title"
             :to="item.route"
+            exact
           >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>

@@ -48,7 +48,7 @@
                         $7220.50
                       </v-list-item-title>
                       <v-list-item-subtitle class="white--text"
-                        >Market Cap $151.458</v-list-item-subtitle
+                        ></v-list-item-subtitle
                       >
                     </v-list-item-content>
                   </v-list-item>
@@ -78,7 +78,7 @@
                         $350.50
                       </v-list-item-title>
                       <v-list-item-subtitle class="white--text"
-                        >Market Cap $151.458</v-list-item-subtitle
+                        ></v-list-item-subtitle
                       >
                     </v-list-item-content>
                   </v-list-item>
@@ -195,7 +195,7 @@
                         <v-icon color="green">mdi mdi-arrow-top-right</v-icon
                         >3.4%
                       </div>
-                      <div class="caption">vs last month</div>
+                      <div class="caption">Last 7 days</div>
                     </div>
                   </div>
                 </div>
